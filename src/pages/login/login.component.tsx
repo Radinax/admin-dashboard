@@ -15,7 +15,6 @@ export function LoginForm({ onSubmit }: Props) {
   const form = useForm<UserCredentials>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
       email: "",
       password: "",
     },
