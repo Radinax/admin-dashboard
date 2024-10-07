@@ -1,3 +1,3 @@
-export default function Profile() {
+export default function ProfileRoute() {
   return <div>Profile</div>;
 }

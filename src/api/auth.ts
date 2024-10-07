@@ -1,7 +1,8 @@
 import { api } from "@/lib/client";
 import { fetchData } from "@/lib/fetch";
-import { CurrentUser } from "@/types/auth";
+import { CurrentUser, currentUserSchema } from "@/types/auth";
 import { HttpStatusCode } from "@/utils/http-status";
+import { useQuery } from "@tanstack/react-query";
 import { HTTPError } from "ky";
 
 /**
@@ -77,6 +78,20 @@ export async function deleteSession() {
  *
  * Get current user session
  */
-export async function getMe(): Promise<CurrentUser> {
-  return fetchData("me");
+export async function getCurrentUser(): Promise<CurrentUser | null> {
+  const data = await fetchData("me");
+  const result = currentUserSchema.safeParse(data);
+  if (result.success) return result.data;
+  return null;
+}
+export function useMeQuery() {
+  return useQuery({
+    queryKey: ["users/me"],
+    queryFn: getCurrentUser,
+  });
+}
+export function useCurrentUser() {
+  const { data } = useMeQuery();
+  console.log({ data });
+  return data;
 }
