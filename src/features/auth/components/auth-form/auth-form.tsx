@@ -6,17 +6,20 @@ import { UserCredentials, formSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
+type FormType = "Register" | "Login";
+
 export type Props = Readonly<{
-  // type: FormType;
+  type: FormType;
   onSubmit: (value: UserCredentials) => void;
 }>;
 
-export function LoginForm({ onSubmit }: Props) {
+export function AuthForm({ onSubmit, type }: Props) {
   const form = useForm<UserCredentials>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: "admin@admin.com",
-      password: "Admin345678.",
+      username: type === "Login" ? undefined : "",
+      email: type === "Login" ? "admin@admin.com" : "",
+      password: type === "Login" ? "Admin345678." : "",
     },
   });
 
@@ -26,11 +29,32 @@ export function LoginForm({ onSubmit }: Props) {
         <fieldset className="flex flex-col justify-center items-center" disabled={form.formState.isSubmitting}>
           <Card className="w-full max-w-sm">
             <CardHeader>
-              <CardTitle className="text-2xl">Login</CardTitle>
-              <CardDescription>Enter your email and password below to Login</CardDescription>
+              <CardTitle className="text-2xl">{type}</CardTitle>
+              <CardDescription>
+                {type === "Login"
+                  ? `Enter your email and password to ${type}`
+                  : `Enter your username, email and password to ${type}`}
+              </CardDescription>
             </CardHeader>
 
             <CardContent className="grid gap-4">
+              {type === "Register" && (
+                <FormField
+                  control={form.control}
+                  name="username"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Username</FormLabel>
+                      <FormControl>
+                        <Input type="text" placeholder="enter your username" {...field} />
+                      </FormControl>
+                      <FormDescription>Your username will be your email if you dont input anything.</FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               <FormField
                 control={form.control}
                 name="email"
@@ -63,7 +87,7 @@ export function LoginForm({ onSubmit }: Props) {
             </CardContent>
             <CardFooter>
               <Button type="submit" className="w-full">
-                Login
+                {type}
               </Button>
             </CardFooter>
           </Card>

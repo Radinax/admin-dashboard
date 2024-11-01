@@ -1,6 +1,6 @@
-import { useCurrentUser } from "@/api/auth";
 import { AppSidebar } from "@/components/sidebar/app-sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { useCurrentUser } from "@/features/auth/api";
 import { Outlet } from "react-router-dom";
 
 export function DashboardLayout() {

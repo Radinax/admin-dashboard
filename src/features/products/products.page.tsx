@@ -1,13 +1,9 @@
 import EmptyState from "@/components/empty-state/empty-state";
-import Row from "@/components/row/row.component";
-import { CreateProductDialog } from "@/pages/products";
-import { Product } from "@/types/products";
+import { CreateProductDialog, Row } from "@/features/products/components";
+import { useProducts } from "@/features/products/products.api";
 
-export type ProductsPageProps = {
-  products?: Product[] | null;
-};
-
-export function ProductsPage({ products }: ProductsPageProps) {
+export function ProductsPage() {
+  const { data: products } = useProducts();
   return (
     <div>
       {/* PRODUCTS LIST */}

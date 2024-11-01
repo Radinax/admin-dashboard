@@ -1,6 +1,6 @@
 import { Link } from "@/components";
 
-export default function Landing() {
+export function LandingPage() {
   return (
     <div className="flex flex-col m-14 justify-center items-center">
       <div className="py-8">

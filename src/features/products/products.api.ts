@@ -1,6 +1,6 @@
+import { Product, ProductsSchema } from "@/features/products/products.types";
 import { api } from "@/lib/client";
 import { fetchData } from "@/lib/fetch";
-import { Product, ProductsSchema } from "@/types/products";
 import { HttpStatusCode } from "@/utils/http-status";
 import { useQuery } from "@tanstack/react-query";
 

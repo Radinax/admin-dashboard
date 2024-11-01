@@ -1,33 +1,33 @@
-import { createSession } from "@/api/auth";
 import { Link } from "@/components";
-import { LoginForm } from "@/pages/login";
+import { createAccount } from "@/features/auth/api";
+import { AuthForm } from "@/features/auth/components";
 import { UserCredentials } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
-export default function Login() {
+export function RegisterPage() {
   const navigate = useNavigate();
 
   function onSubmit(values: UserCredentials) {
-    const op = createSession(values.email, values.password);
+    const op = createAccount(values.username || values.email, values.email, values.password);
     console.log({ values });
     toast.promise(op, {
       success: () => {
-        navigate("/app");
-        return "You successfully logged in";
+        navigate("/login");
+        return "You successfully register";
       },
       error: (error: unknown) => {
         console.log({ error });
-        return "Something went wrong while authenticating";
+        return "Something went wrong while registering";
       },
-      loading: "Authenticating...",
+      loading: "Registering...",
     });
   }
   return (
     <div className="flex flex-col items-center gap-4">
-      <LoginForm onSubmit={onSubmit} />
+      <AuthForm onSubmit={onSubmit} type="Register" />
       <Link className="underline text-xs" to="/register">
-        Click to register account
+        Click to login
       </Link>
     </div>
   );

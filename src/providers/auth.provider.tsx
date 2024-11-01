@@ -1,4 +1,4 @@
-import { useCurrentUser } from "@/api/auth";
+import { useCurrentUser } from "@/features/auth/api";
 import { CurrentUser } from "@/types/auth";
 import { PropsWithChildren, createContext } from "react";
 import { useNavigate } from "react-router-dom";

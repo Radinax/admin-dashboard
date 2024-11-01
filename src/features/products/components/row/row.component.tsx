@@ -7,7 +7,7 @@ interface RowProps {
   price: number;
 }
 
-const Row: React.FC<RowProps> = ({ name, type, price }) => {
+export const Row: React.FC<RowProps> = ({ name, type, price }) => {
   return (
     <div className="flex justify-between items-center p-4 border-b border-gray-300 w-full">
       <div className="flex flex-row gap-40">
@@ -23,5 +23,3 @@ const Row: React.FC<RowProps> = ({ name, type, price }) => {
     </div>
   );
 };
-
-export default Row;
