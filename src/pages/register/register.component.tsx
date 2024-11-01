@@ -25,7 +25,7 @@ export function RegisterForm({ onSubmit }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset className="flex flex-col justify-center items-center">
+        <fieldset className="flex flex-col justify-center items-center" disabled={form.formState.isSubmitting}>
           <Card className="w-full max-w-sm">
             <CardHeader>
               <CardTitle className="text-2xl">Register</CardTitle>

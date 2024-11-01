@@ -1,4 +1,5 @@
 import EmptyState from "@/components/empty-state/empty-state";
+import Row from "@/components/row/row.component";
 import { CreateProductDialog } from "@/pages/products";
 import { Product } from "@/types/products";
 
@@ -12,8 +13,8 @@ export function ProductsPage({ products }: ProductsPageProps) {
       {/* PRODUCTS LIST */}
       <div>
         {products ? (
-          products.map((product) => {
-            return <div key={product.name}>{product.name}</div>;
+          products.map((product, i) => {
+            return <Row key={`${product.name + i}`} name={product.name} price={product.price} type={product.type} />;
           })
         ) : (
           <EmptyState message="No products available" />

@@ -21,6 +21,7 @@ import { Toaster } from "sonner";
  * email: admin@admin.com
  * pass: Admin345678.
  */
+// TO-DO MOVE ALL THESE PROVIDERS TO THE RESPECTIVE FOLDER
 export default function App() {
   return (
     <Suspense
