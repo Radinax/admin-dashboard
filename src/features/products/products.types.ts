@@ -10,7 +10,7 @@ export type ProductFilters = {
   search?: string;
 };
 
-export const productSchema = z.object({
+export const ProductSchema = z.object({
   name: z
     .string()
     .min(1, { message: "Name is required" })
@@ -23,7 +23,11 @@ export const productSchema = z.object({
     .max(10000, { message: "Price must not exceed 10,000" }),
   description: z.string().optional(),
 });
-export const ProductsSchema = productSchema.array();
+export const ProductsSchema = ProductSchema.array();
 
 // Type inference for TypeScript
-export type Product = z.infer<typeof productSchema>;
+export type Product = z.infer<typeof ProductSchema>;
+
+export type ProductId = {
+  productId: string;
+};
