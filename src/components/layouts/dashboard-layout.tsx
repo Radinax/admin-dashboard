@@ -7,14 +7,17 @@ export function DashboardLayout() {
   const currentUser = useCurrentUser();
   const profile = {
     name: currentUser?.username || "",
+    email: currentUser?.email,
   };
   return (
     <div className="flex">
       <SidebarProvider>
         <AppSidebar profile={profile} />
-        <div className="p-24 w-full">
+        <div className="w-full">
           <SidebarTrigger />
-          <Outlet />
+          <div className="p-6">
+            <Outlet />
+          </div>
         </div>
       </SidebarProvider>
     </div>

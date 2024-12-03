@@ -1,4 +1,9 @@
-import { Product, ProductId, ProductSchema, ProductsSchema } from "@/features/products/products.types";
+import {
+  Product,
+  ProductId,
+  ProductSchema,
+  ProductsSchema,
+} from "@/features/products/products.types";
 import { api } from "@/lib/client";
 import { fetchData } from "@/lib/fetch";
 import { MutationConfig, QueryConfig, queryClient } from "@/lib/query-client";
@@ -34,7 +39,7 @@ export async function fetchProducts(): Promise<Product[]> {
 export const getProductsQueryOptions = () => {
   return queryOptions({
     queryKey: ["get-products"],
-    queryFn: () => fetchProducts(),
+    queryFn: fetchProducts,
   });
 };
 type UseProductsOptions = {
@@ -53,7 +58,9 @@ export function useProducts({ queryConfig }: UseProductsOptions = {}) {
  */
 
 // Define fetcher
-export async function fetchProductById({ productId }: ProductId): Promise<Product | null> {
+export async function fetchProductById({
+  productId,
+}: ProductId): Promise<Product | null> {
   const data = await fetchData(`products/${productId}`);
   const result = ProductSchema.safeParse(data);
   if (result.success) return result.data;
@@ -71,7 +78,10 @@ type UseProductByIdOptions = {
   queryConfig?: QueryConfig<typeof getProductByIdQueryOptions>;
 };
 // Custom hook to get product by id
-export function useProductById({ queryConfig, productId }: UseProductByIdOptions) {
+export function useProductById({
+  queryConfig,
+  productId,
+}: UseProductByIdOptions) {
   return useQuery({
     ...getProductByIdQueryOptions(productId),
     ...queryConfig,
@@ -92,7 +102,9 @@ export async function deleteProductById({ productId }: ProductId) {
 type UseDeleteConfigOptions = {
   mutationConfig?: MutationConfig<typeof deleteProductById>;
 };
-export const useDeleteProductById = ({ mutationConfig }: UseDeleteConfigOptions = {}) => {
+export const useDeleteProductById = ({
+  mutationConfig,
+}: UseDeleteConfigOptions = {}) => {
   const { onSuccess, onError, ...restConfig } = mutationConfig || {};
 
   return useMutation({

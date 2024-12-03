@@ -1,10 +1,26 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { UserCredentials, formSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router-dom";
 
 type FormType = "Register" | "Login";
 
@@ -26,7 +42,10 @@ export function AuthForm({ onSubmit, type }: Props) {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset className="flex flex-col justify-center items-center" disabled={form.formState.isSubmitting}>
+        <fieldset
+          className="flex flex-col justify-center items-center"
+          disabled={form.formState.isSubmitting}
+        >
           <Card className="w-full max-w-sm">
             <CardHeader>
               <CardTitle className="text-2xl">{type}</CardTitle>
@@ -46,9 +65,16 @@ export function AuthForm({ onSubmit, type }: Props) {
                     <FormItem>
                       <FormLabel>Username</FormLabel>
                       <FormControl>
-                        <Input type="text" placeholder="enter your username" {...field} />
+                        <Input
+                          type="text"
+                          placeholder="enter your username"
+                          {...field}
+                        />
                       </FormControl>
-                      <FormDescription>Your username will be your email if you dont input anything.</FormDescription>
+                      <FormDescription>
+                        Your username will be your email if you dont input
+                        anything.
+                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -62,9 +88,15 @@ export function AuthForm({ onSubmit, type }: Props) {
                   <FormItem>
                     <FormLabel>Email</FormLabel>
                     <FormControl>
-                      <Input type="email" placeholder="enter your email" {...field} />
+                      <Input
+                        type="email"
+                        placeholder="enter your email"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormDescription>We wont share your email with anybody.</FormDescription>
+                    <FormDescription>
+                      We wont share your email with anybody.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -77,18 +109,39 @@ export function AuthForm({ onSubmit, type }: Props) {
                   <FormItem>
                     <FormLabel>Password</FormLabel>
                     <FormControl>
-                      <Input type="password" placeholder="enter your password" {...field} />
+                      <Input
+                        type="password"
+                        placeholder="enter your password"
+                        {...field}
+                      />
                     </FormControl>
-                    <FormDescription>Try to make it as secure as possible.</FormDescription>
+                    <FormDescription>
+                      Try to make it as secure as possible.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             </CardContent>
-            <CardFooter>
+            <CardFooter className="flex flex-col">
               <Button type="submit" className="w-full">
                 {type}
               </Button>
+              {type === "Login" ? (
+                <div className="mt-4 text-center text-sm">
+                  Don't have an account?{" "}
+                  <Link to="/register" className="underline">
+                    Register
+                  </Link>
+                </div>
+              ) : (
+                <div className="mt-4 text-center text-sm">
+                  Have an account?{" "}
+                  <Link to="/login" className="underline">
+                    Login!
+                  </Link>
+                </div>
+              )}
             </CardFooter>
           </Card>
         </fieldset>

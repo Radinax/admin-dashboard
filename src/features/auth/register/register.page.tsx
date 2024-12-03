@@ -1,4 +1,3 @@
-import { Link } from "@/components";
 import { createAccount } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
 import { UserCredentials } from "@/types/auth";
@@ -9,7 +8,11 @@ export function RegisterPage() {
   const navigate = useNavigate();
 
   function onSubmit(values: UserCredentials) {
-    const op = createAccount(values.username || values.email, values.email, values.password);
+    const op = createAccount(
+      values.username || values.email,
+      values.email,
+      values.password
+    );
     console.log({ values });
     toast.promise(op, {
       success: () => {
@@ -24,11 +27,10 @@ export function RegisterPage() {
     });
   }
   return (
-    <div className="flex flex-col items-center gap-4">
-      <AuthForm onSubmit={onSubmit} type="Register" />
-      <Link className="underline text-xs" to="/register">
-        Click to login
-      </Link>
+    <div className="flex h-screen w-full justify-center items-center">
+      <div className="flex flex-col items-center gap-4">
+        <AuthForm onSubmit={onSubmit} type="Register" />
+      </div>
     </div>
   );
 }

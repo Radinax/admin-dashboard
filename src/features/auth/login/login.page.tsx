@@ -1,4 +1,3 @@
-import { Link } from "@/components";
 import { createSession } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
 import { UserCredentials } from "@/types/auth";
@@ -24,11 +23,10 @@ export function LoginPage() {
     });
   }
   return (
-    <div className="flex flex-col items-center gap-4">
-      <AuthForm onSubmit={onSubmit} type="Login" />
-      <Link className="underline text-xs" to="/register">
-        Click to register account
-      </Link>
+    <div className="flex w-full h-screen justify-center items-center">
+      <div className="flex flex-col items-center gap-4">
+        <AuthForm onSubmit={onSubmit} type="Login" />
+      </div>
     </div>
   );
 }

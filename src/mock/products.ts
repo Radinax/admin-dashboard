@@ -1,74 +1,40 @@
-import { Product } from "@/types/products";
+import { allowedTypes, Product } from "@/types/products";
 
 export const products: Product[] = [
   {
     id: 1,
-    name: "Product 1",
-    category: "first",
-    price: 100,
-    image: "https://via.placeholder.com/150",
+    name: "Bluetooth Headphones",
+    type: allowedTypes[0], // electronics
+    price: 79.99,
+    description: "Wireless Bluetooth headphones with superior sound quality.",
   },
   {
     id: 2,
-    name: "Product 2",
-    category: "second",
-    price: 200,
-    image: "https://via.placeholder.com/150",
+    name: "Men's T-Shirt",
+    type: allowedTypes[1], // clothing
+    price: 19.99,
+    description: "Comfortable cotton t-shirt available in various colors.",
   },
   {
     id: 3,
-    name: "Product 3",
-    category: "third",
-    price: 300,
-    image: "https://via.placeholder.com/150",
+    name: "Wooden Dining Table",
+    type: allowedTypes[2], // furniture
+    price: 499.99,
+    description: "Spacious wooden dining table perfect for family gatherings.",
   },
   {
     id: 4,
-    name: "Product 4",
-    category: "first",
-    price: 400,
-    image: "https://via.placeholder.com/150",
+    name: "Organic Granola Bars",
+    type: allowedTypes[3], // food
+    price: 12.5,
+    description:
+      "Healthy organic granola bars, perfect for on-the-go snacking.",
   },
   {
     id: 5,
-    name: "Product 5",
-    category: "second",
-    price: 500,
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 6,
-    name: "Product 6",
-    category: "third",
-    price: 600,
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 7,
-    name: "Product 7",
-    category: "first",
-    price: 700,
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 8,
-    name: "Product 8",
-    category: "second",
-    price: 800,
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 9,
-    name: "Product 9",
-    category: "third",
-    price: 900,
-    image: "https://via.placeholder.com/150",
-  },
-  {
-    id: 10,
-    name: "Product 10",
-    category: "first",
-    price: 1000,
-    image: "https://via.placeholder.com/150",
+    name: "Smart LED TV",
+    type: allowedTypes[0], // electronics
+    price: 899.99,
+    description: "Ultra HD Smart LED TV with streaming capabilities.",
   },
 ];

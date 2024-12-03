@@ -1,22 +1,44 @@
+import { Loader } from "@/components";
 import EmptyState from "@/components/empty-state/empty-state";
-import { CreateProductDialog, Row } from "@/features/products/components";
+import { CreateProductDialog } from "@/features/products/components";
+import {
+  ProductBody,
+  ProductsTable,
+} from "@/features/products/components/products-table/products-table";
 import { useProducts } from "@/features/products/products.api";
 
 export function ProductsPage() {
-  const { data: products } = useProducts();
+  const { data: products, isLoading } = useProducts();
+
+  if (isLoading) {
+    return (
+      <div className="flex w-full items-center justify-center">
+        <Loader size="xl" />
+      </div>
+    );
+  }
+
+  if (!products) {
+    return <EmptyState message="No products available" />;
+  }
+
+  const productBody: ProductBody[] = products.map((product) => {
+    return {
+      name: product.name,
+      type: product.type,
+      price: String(product.price),
+      description: product.description || "",
+    };
+  });
+
   return (
     <div>
       {/* PRODUCTS LIST */}
-      <div>
-        {products ? (
-          products.map((product, i) => {
-            return <Row key={`${product.name + i}`} name={product.name} price={product.price} type={product.type} />;
-          })
-        ) : (
-          <EmptyState message="No products available" />
-        )}
-      </div>
       <CreateProductDialog />
+      <ProductsTable
+        headerList={["Name", "Price", "Type", "Description"]}
+        headerBody={productBody}
+      />
     </div>
   );
 }

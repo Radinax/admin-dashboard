@@ -5,7 +5,10 @@ export const formSchema = z.object({
     .string()
     .min(3, "Username must be at least 3 characters long")
     .max(20, "Username must not exceed 20 characters")
-    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores")
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers, and underscores"
+    )
     .optional(),
 
   email: z.string().email("Invalid email address"), // Validates email format
@@ -23,6 +26,7 @@ export type UserCredentials = z.infer<typeof formSchema>;
 
 export const currentUserSchema = z.object({
   username: z.string(),
+  email: z.string().email("Invalid email address"),
   sessionId: z.string(),
 });
 

@@ -10,7 +10,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { Avatar } from "@radix-ui/react-avatar";
+import { NavUser } from "@/components/sidebar/app-sidebar-nav-user";
 
 // Menu items.
 const items = [
@@ -34,6 +34,7 @@ const items = [
 type ProfileProps = {
   picture?: string;
   name: string;
+  email?: string;
 };
 
 type SidebarProps = {
@@ -41,9 +42,14 @@ type SidebarProps = {
 };
 
 export function AppSidebar({ profile }: SidebarProps) {
+  const user = {
+    name: profile.name,
+    email: profile.email,
+    avatar: profile.name,
+  };
   return (
-    <Sidebar>
-      <SidebarContent>
+    <Sidebar collapsible="icon">
+      <SidebarContent className="scroll-m-0">
         <SidebarGroup className="flex justify-between h-full my-4">
           <SidebarGroupContent>
             <SidebarMenu>
@@ -59,13 +65,8 @@ export function AppSidebar({ profile }: SidebarProps) {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-          <SidebarFooter>
-            <div className="flex gap-1 items-center">
-              <Avatar className="bg-sky-600 text-white font-semibold p-2 rounded-full">
-                {profile.name.slice(0, 2).toUpperCase()}
-              </Avatar>
-              <div>{profile.name}</div>
-            </div>
+          <SidebarFooter className="border-t border-sidebar-border">
+            <NavUser user={user} />
           </SidebarFooter>
         </SidebarGroup>
       </SidebarContent>

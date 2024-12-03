@@ -11,9 +11,9 @@ export const fetchProducts = async (options?: ProductFilters) => {
 
   let filteredProducts = products;
 
-  if (options?.category) {
+  if (options?.type) {
     filteredProducts = filteredProducts.filter((product) => {
-      return product.category === options.category;
+      return product.type === options.type;
     });
   }
 

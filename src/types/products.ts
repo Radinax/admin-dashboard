@@ -1,16 +1,22 @@
-import { z } from "zod";
+import { number, z } from "zod";
 
 // Define allowed product types
-export const allowedTypes = ["electronics", "clothing", "furniture", "food"] as const;
+export const allowedTypes = [
+  "electronics",
+  "clothing",
+  "furniture",
+  "food",
+] as const;
 export type ProductType = (typeof allowedTypes)[number];
 
 export type ProductFilters = {
-  category?: "first" | "second" | "third";
+  type?: ProductType;
   maxPrice?: number;
   search?: string;
 };
 
 export const productSchema = z.object({
+  id: number(),
   name: z
     .string()
     .min(1, { message: "Name is required" })
