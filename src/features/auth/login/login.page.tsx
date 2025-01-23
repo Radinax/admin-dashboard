@@ -1,5 +1,6 @@
 import { createSession } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
+import DashboardAuthPage from "@/features/auth/components/layout/dashboard-auth-layout";
 import { UserCredentials } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
@@ -7,26 +8,32 @@ import { toast } from "sonner";
 export function LoginPage() {
   const navigate = useNavigate();
 
-  function onSubmit(values: UserCredentials) {
-    const op = createSession(values.email, values.password);
-    console.log({ values });
-    toast.promise(op, {
-      success: () => {
-        navigate("/app");
-        return "You successfully logged in";
-      },
-      error: (error: unknown) => {
-        console.log({ error });
-        return "Something went wrong while authenticating";
-      },
-      loading: "Authenticating...",
-    });
+  async function onSubmit(values: UserCredentials) {
+    try {
+      // Show loading toast
+      toast.loading("Authenticating...");
+
+      // Attempt to create a session
+      await createSession(values.email, values.password);
+
+      // On success, navigate to the app and show success toast
+      toast.success("You have successfully logged in!");
+      navigate("/app");
+    } catch (error) {
+      // Handle errors and show appropriate toast message
+      console.error("Login error:", error);
+      toast.error(
+        "Failed to log in. Please check your credentials and try again."
+      );
+    } finally {
+      // Dismiss the loading toast
+      toast.dismiss();
+    }
   }
+
   return (
-    <div className="flex w-full h-screen justify-center items-center">
-      <div className="flex flex-col items-center gap-4">
-        <AuthForm onSubmit={onSubmit} type="Login" />
-      </div>
-    </div>
+    <DashboardAuthPage type="login">
+      <AuthForm onSubmit={onSubmit} type="Login" />
+    </DashboardAuthPage>
   );
 }
