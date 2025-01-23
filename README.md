@@ -20,6 +20,7 @@ bun run dev
 
 The structure follows a feature based pattern where each feature would have its own associated api, components, pages and routes.
 
+```bash
 src/
 ┣ components/
 ┃ ┣ empty-state/
@@ -113,3 +114,4 @@ src/
 ┣ main.tsx
 ┣ test-utils.tsx
 ┗ vite-env.d.ts
+```

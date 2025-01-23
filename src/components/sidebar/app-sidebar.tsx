@@ -1,5 +1,4 @@
 import { Home, Inbox, Settings } from "lucide-react";
-
 import {
   Sidebar,
   SidebarContent,
@@ -12,8 +11,13 @@ import {
 } from "@/components/ui/sidebar";
 import { NavUser } from "@/components/sidebar/app-sidebar-nav-user";
 
-// Menu items.
-const items = [
+type MenuItem = {
+  title: string;
+  url: string;
+  icon: React.ComponentType;
+};
+
+const menuItems: MenuItem[] = [
   {
     title: "Home",
     url: "/app",
@@ -45,27 +49,31 @@ export function AppSidebar({ profile }: SidebarProps) {
   const user = {
     name: profile.name,
     email: profile.email,
-    avatar: profile.name,
+    avatar: profile.picture || profile.name,
   };
+
   return (
-    <Sidebar collapsible="icon">
+    <Sidebar collapsible="icon" className="bg-gray-900 text-white">
       <SidebarContent className="scroll-m-0">
-        <SidebarGroup className="flex justify-between h-full my-4">
+        <SidebarGroup className="flex flex-col justify-between h-full my-4">
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {menuItems.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <a
+                      href={item.url}
+                      className="flex items-center gap-3 p-3 hover:bg-gray-800 rounded-md transition-colors duration-200"
+                    >
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span className="text-gray-100">{item.title}</span>
                     </a>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-          <SidebarFooter className="border-t border-sidebar-border">
+          <SidebarFooter className="border-t border-gray-800 pt-4">
             <NavUser user={user} />
           </SidebarFooter>
         </SidebarGroup>
