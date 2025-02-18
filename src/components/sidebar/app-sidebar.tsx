@@ -1,4 +1,4 @@
-import { Home, Inbox, Settings } from "lucide-react";
+import { CalendarMinus, Home, Inbox, Settings } from "lucide-react";
 import {
   Sidebar,
   SidebarContent,
@@ -32,6 +32,11 @@ const menuItems: MenuItem[] = [
     title: "Profile",
     url: "#",
     icon: Settings,
+  },
+  {
+    title: "Schedule",
+    url: "/app/schedule",
+    icon: CalendarMinus,
   },
 ];
 

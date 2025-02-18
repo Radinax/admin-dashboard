@@ -6,29 +6,18 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 export function LoginPage() {
-  const navigate = useNavigate();
+  let navigate = useNavigate();
 
   async function onSubmit(values: UserCredentials) {
-    try {
-      // Show loading toast
-      toast.loading("Authenticating...");
-
-      // Attempt to create a session
-      await createSession(values.email, values.password);
-
-      // On success, navigate to the app and show success toast
-      toast.success("You have successfully logged in!");
-      navigate("/app");
-    } catch (error) {
-      // Handle errors and show appropriate toast message
-      console.error("Login error:", error);
-      toast.error(
-        "Failed to log in. Please check your credentials and try again."
-      );
-    } finally {
-      // Dismiss the loading toast
-      toast.dismiss();
-    }
+    const promise = createSession(values.email, values.password);
+    toast.promise(promise, {
+      loading: "Authenticating...",
+      success: () => {
+        navigate("/app");
+        return "You have successfully logged in!";
+      },
+      error: "Failed to log in. Please check your credentials and try again.",
+    });
   }
 
   return (
