@@ -1,47 +1,66 @@
 import {
+  Button,
+  Table,
+  TableBody,
   TableCaption,
+  TableCell,
+  TableHead,
   TableHeader,
   TableRow,
-  TableHead,
-  TableBody,
-  Table,
-  TableCell,
-} from "@/components/ui/table";
-import { ProductType } from "@/types/products";
+} from "@/components/ui";
+import { useProducts, deleteProduct } from "../../api/products.api";
+import { toast } from "sonner";
+import { Link } from "react-router-dom";
+import { Pencil, Trash2 } from "lucide-react";
 
-export type ProductBody = {
-  type: ProductType;
-  name: string;
-  price: string;
-  description: string;
-};
+export const ProductsTable = () => {
+  const { data: products = [], refetch } = useProducts();
 
-interface ProductsTableProps {
-  headerList: string[];
-  headerBody: ProductBody[];
-}
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteProduct(id);
+      toast.success("Product deleted successfully");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to delete product");
+    }
+  };
 
-export const ProductsTable = ({
-  headerList,
-  headerBody,
-}: ProductsTableProps) => {
   return (
     <Table>
-      <TableCaption>A list of your recent products</TableCaption>
+      <TableCaption>A list of your products</TableCaption>
       <TableHeader>
         <TableRow>
-          {headerList.map((header) => (
-            <TableHead key={header}>{header}</TableHead>
-          ))}
+          <TableHead>Name</TableHead>
+          <TableHead>Price</TableHead>
+          <TableHead>Category</TableHead>
+          <TableHead>Stock</TableHead>
+          <TableHead>Description</TableHead>
+          <TableHead className="text-right">Actions</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>
-        {headerBody.map((header, i) => (
-          <TableRow key={`${header.name}+${i}`}>
-            <TableCell>{header.name}</TableCell>
-            <TableCell>{header.price}</TableCell>
-            <TableCell>{header.type}</TableCell>
-            <TableCell>{header.description}</TableCell>
+        {products.map((product) => (
+          <TableRow key={product.id}>
+            <TableCell className="font-medium">{product.name}</TableCell>
+            <TableCell>${product.price.toFixed(2)}</TableCell>
+            <TableCell>{product.category}</TableCell>
+            <TableCell>{product.stock}</TableCell>
+            <TableCell className="max-w-xs truncate">{product.description}</TableCell>
+            <TableCell className="text-right space-x-2">
+              <Button variant="ghost" size="icon" asChild>
+                <Link to={`/products/${product.id}/edit`}>
+                  <Pencil className="h-4 w-4" />
+                </Link>
+              </Button>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                onClick={() => handleDelete(product.id)}
+              >
+                <Trash2 className="h-4 w-4 text-red-500" />
+              </Button>
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
