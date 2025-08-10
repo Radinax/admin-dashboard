@@ -23,12 +23,19 @@ import { useForm } from "react-hook-form";
 
 type FormType = "Register" | "Login";
 
-export type Props = Readonly<{
+export type AuthFormProps = Readonly<{
   type: FormType;
   onSubmit: (value: UserCredentials) => void;
+  isSubmitting?: boolean; // <-- New: controlled submitting state
+  submitError?: string; // <-- New: server error message
 }>;
 
-export function AuthForm({ onSubmit, type }: Props) {
+export function AuthForm({
+  type,
+  onSubmit,
+  isSubmitting: externalIsSubmitting,
+  submitError,
+}: AuthFormProps) {
   const form = useForm<UserCredentials>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -39,13 +46,14 @@ export function AuthForm({ onSubmit, type }: Props) {
   });
 
   const isLogin = type === "Login";
+  const isLoading = externalIsSubmitting || form.formState.isSubmitting;
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)}>
         <fieldset
           className="flex flex-col justify-center items-center"
-          disabled={form.formState.isSubmitting}
+          disabled={isLoading}
         >
           <Card className="w-full max-w-sm">
             <CardHeader>
@@ -125,12 +133,19 @@ export function AuthForm({ onSubmit, type }: Props) {
                   </FormItem>
                 )}
               />
+
+              {/* Server Error */}
+              {submitError && (
+                <div className="text-sm text-red-500 mt-2 text-center">
+                  {submitError}
+                </div>
+              )}
             </CardContent>
 
-            <CardFooter className="flex flex-col">
+            <CardFooter className="flex flex-col gap-2">
               {/* Submit Button */}
-              <Button type="submit" className="w-full">
-                {type}
+              <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Processing..." : type}
               </Button>
             </CardFooter>
           </Card>

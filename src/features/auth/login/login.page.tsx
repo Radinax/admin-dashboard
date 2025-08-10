@@ -1,4 +1,4 @@
-import { createSession } from "@/features/auth/api";
+import { useCreateSession } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
 import DashboardAuthPage from "@/features/auth/components/layout/dashboard-auth-layout";
 import { UserCredentials } from "@/types/auth";
@@ -7,22 +7,28 @@ import { toast } from "sonner";
 
 export function LoginPage() {
   let navigate = useNavigate();
+  const { mutate, isPending, error } = useCreateSession();
 
   async function onSubmit(values: UserCredentials) {
-    const promise = createSession(values.email, values.password);
-    toast.promise(promise, {
-      loading: "Authenticating...",
-      success: () => {
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("Login successful");
         navigate("/app");
-        return "You have successfully logged in!";
       },
-      error: "Failed to log in. Please check your credentials and try again.",
+      onError: (err: Error) => {
+        toast.error(`Login failed: ${err.message}`);
+      },
     });
   }
 
   return (
     <DashboardAuthPage type="login">
-      <AuthForm onSubmit={onSubmit} type="Login" />
+      <AuthForm
+        type="Login"
+        onSubmit={onSubmit}
+        isSubmitting={isPending}
+        submitError={error?.message}
+      />
     </DashboardAuthPage>
   );
 }

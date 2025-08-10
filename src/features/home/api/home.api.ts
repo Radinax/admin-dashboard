@@ -17,12 +17,11 @@ export async function getProductsSummary(): Promise<ProductSummaryType | null> {
 }
 export function useGetProductsSummaryQuery() {
   return useQuery({
-    queryKey: ["users/me"],
+    queryKey: ["products/summary"],
     queryFn: getProductsSummary,
   });
 }
 export function useGetProductsSummary() {
   const { data } = useGetProductsSummaryQuery();
-  console.log({ data });
   return data;
 }

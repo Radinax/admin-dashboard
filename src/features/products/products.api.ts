@@ -28,7 +28,7 @@ export async function createProduct({ ...products }: Product) {
 
 // Define fetcher
 export async function fetchProducts(): Promise<Product[]> {
-  const data = await fetchData("products");
+  const data = await fetchData("products", ProductsSchema);
   const result = ProductsSchema.safeParse(data);
   if (!result.success) {
     throw new Error("Failed to validate product data");
@@ -61,7 +61,7 @@ export function useProducts({ queryConfig }: UseProductsOptions = {}) {
 export async function fetchProductById({
   productId,
 }: ProductId): Promise<Product | null> {
-  const data = await fetchData(`products/${productId}`);
+  const data = await fetchData(`products/${productId}`, ProductSchema);
   const result = ProductSchema.safeParse(data);
   if (result.success) return result.data;
   return null;

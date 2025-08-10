@@ -44,7 +44,7 @@ export async function getProducts(): Promise<Product[]> {
 export async function getProduct(id: string): Promise<Product | null> {
   try {
     const response = await api.get(`products/${id}`);
-    return await response.json<Product>();
+    return response.json<Product>();
   } catch (error) {
     if (error instanceof HTTPError) {
       if (error.response.status === HttpStatusCode.NotFound) {
