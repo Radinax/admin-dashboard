@@ -22,7 +22,9 @@ export function CreateProductDialog() {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Create Product</DialogTitle>
-          <DialogDescription>Create a product linked to your account</DialogDescription>
+          <DialogDescription>
+            Create a product linked to your account
+          </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">

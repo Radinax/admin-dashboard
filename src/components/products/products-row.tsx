@@ -8,7 +8,7 @@ interface RowProps {
   isHeader?: boolean;
 }
 
-export const Row: React.FC<RowProps> = ({
+export const ProductRow: React.FC<RowProps> = ({
   name,
   type,
   price,

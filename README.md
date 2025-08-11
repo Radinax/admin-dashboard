@@ -6,16 +6,16 @@ A modern and responsive admin dashboard built with React and TypeScript, featuri
 
 - 🔐 **Authentication System**: Secure login and registration with JWT
 - 📊 **Dashboard Overview**: Key metrics and statistics at a glance
-- 📦 **Product Management**: 
+- 📦 **Product Management**:
   - Create, edit, and delete products
   - Categorized by type (Electronics, Clothing, Furniture, Food)
   - Real-time form validation with Zod
   - Structured data management with TypeScript
-- 🎨 **Modern UI/UX**: 
+- 🎨 **Modern UI/UX**:
   - Built with Shadcn/UI components
   - Consistent design language
   - Smooth transitions and animations
-- 🚀 **Performance**: 
+- 🚀 **Performance**:
   - Built with Bun for lightning-fast development
   - React Query for efficient data fetching
   - Optimized API calls with caching
@@ -44,17 +44,20 @@ Make sure you have [Bun](https://bun.sh) installed on your machine.
 ### Installation
 
 1. Clone the repository:
+
    ```bash
    git clone https://github.com/Radinax/admin-dashboard.git
    cd admin-dashboard
    ```
 
 2. Install dependencies:
+
    ```bash
    bun install
    ```
 
 3. Create a `.env` file in the root directory and add your environment variables:
+
    ```env
    VITE_API_URL=your_api_url_here
    ```
@@ -82,17 +85,107 @@ bun test
 
 ```
 src/
-├── components/      # Reusable UI components
-│   └── ui/         # Shadcn UI components
-├── features/        # Feature-based modules
-│   ├── auth/       # Authentication feature
-│   └── products/   # Product management feature
-├── hooks/          # Custom React hooks
-├── lib/            # Utility libraries
-│   ├── client.ts   # API client configuration
-│   └── utils.ts    # Helper functions
-├── providers/      # React context providers
-└── types/          # TypeScript type definitions
+├── app/                             # 🧭 Main app routing (logical grouping, not SSR)
+│   ├── auth/
+│   │   ├── LoginPage.tsx            # → /login
+│   │   └── RegisterPage.tsx         # → /register
+│   └── dashboard/
+│       ├── HomePage.tsx             # → /app (dashboard home)
+│       ├── ProductsPage.tsx         # → /app/products
+│       ├── EditProductPage.tsx      # → /app/products/:id
+│       └── SchedulePage.tsx         # → /app/schedule
+│
+├── components/                      # 🧩 Reusable UI components
+│   ├── ui/                          # ← shadcn/ui or custom primitives
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── form.tsx
+│   │   ├── sheet.tsx
+│   │   ├── sidebar.tsx
+│   │   ├── skeleton.tsx
+│   │   ├── spinner.tsx
+│   │   └── ...
+│   │
+│   ├── auth/
+│   │   └── AuthForm.tsx             # Shared login/register form
+│   │
+│   ├── layouts/
+│   │   ├── DashboardLayout.tsx      # Sidebar + main content
+│   │   └── RequireAuth.tsx          # Auth guard wrapper
+│   │
+│   ├── sidebar/
+│   │   ├── AppSidebar.tsx
+│   │   ├── AppSidebarTrigger.tsx
+│   │   └── AppSidebarSkeleton.tsx
+│   │
+│   ├── empty-state/
+│   │   └── EmptyState.tsx
+│   │
+│   ├── loader/
+│   │   └── Loader.tsx
+│   │
+│   ├── not-found/
+│   │   └── NotFoundPage.tsx
+│   │
+│   ├── error-boundary-fallback/
+│   │   └── ErrorBoundaryFallback.tsx
+│   │
+│   └── products/
+│       ├── ProductsTable.tsx
+│       ├── ProductFilter.tsx
+│       ├── ProductForm.tsx
+│       └── CreateProductDialog.tsx
+│
+├── features/                        # 🏗️ Feature domains (API, types, logic)
+│   ├── auth/
+│   │   ├── api/
+│   │   │   └── auth.api.ts          # createSession, createAccount, etc.
+│   │   ├── types/
+│   │   │   └── auth.types.ts        # Zod schemas, CurrentUser, etc.
+│   │   └── utils/
+│   │       └── index.ts
+│   │
+│   ├── products/
+│   │   ├── api/
+│   │   │   └── products.api.ts
+│   │   ├── types/
+│   │   │   └── products.types.ts
+│   │   └── utils/
+│   │       └── useProductFilters.ts
+│   │
+│   └── home/
+│       ├── api/
+│       │   └── home.api.ts
+│       └── types/
+│           └── home.types.ts
+│
+├── lib/                             # 🔧 Core utilities & configs
+│   ├── api/
+│   │   ├── client.ts                # ky instance
+│   │   └── fetch.ts                 # typed fetch wrapper
+│   ├── query-client.ts              # React Query client
+│   ├── routes.ts                    # ROUTES.login, etc.
+│   └── utils.ts                     # cn, format, etc.
+│
+├── providers/                       # 🏭 Global context providers
+│   └── AppProvider.tsx              # Combines Auth, Query, Toast, Router
+│
+├── hooks/                           # 🔗 Shared custom hooks
+│   ├── useDebounce.ts
+│   └── useMobile.ts
+│
+├── types/                           # 📦 Global types (if not in features)
+│   └── index.ts
+│
+├── mock/                            # 🧪 Mock data (for dev/testing)
+│   └── products.mock.ts
+│
+├── assets/                          # 🖼️ Static assets
+│   └── vite.svg
+│
+├── main.tsx                         # 🚀 Entry point
+└── index.html                       # 🧱 HTML shell
 ```
 
 ## Features in Detail
@@ -102,7 +195,7 @@ src/
 The product management system includes:
 
 - **Types**: Electronics, Clothing, Furniture, Food
-- **Categories**: 
+- **Categories**:
   - Electronics: Smartphones, Laptops, Accessories
   - Clothing: Shirts, Pants, Shoes
   - Furniture: Tables, Chairs, Sofas

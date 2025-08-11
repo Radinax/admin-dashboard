@@ -1,5 +1,5 @@
+import { AuthForm } from "@/components/auth/auth-form";
 import { useCreateSession } from "@/features/auth/api";
-import { AuthForm } from "@/features/auth/components";
 import DashboardAuthPage from "@/features/auth/components/layout/dashboard-auth-layout";
 import { ROUTES } from "@/lib/routes";
 import { LoginData } from "@/types/auth";

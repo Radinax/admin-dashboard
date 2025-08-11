@@ -10,8 +10,8 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui";
-import { ProductsTable } from "../components/products-table/products-table";
-import { ProductForm } from "../components/product-form/product-form";
+import { ProductForm } from "@/features/products/components/product-form/product-form";
+import { ProductsTable } from "@/features/products/components/products-table/products-table";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 

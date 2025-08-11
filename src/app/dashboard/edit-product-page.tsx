@@ -1,9 +1,9 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui";
-import { useProduct } from "../api/products.api";
-import { ProductForm } from "../components/product-form/product-form";
 import { useNavigate, useParams } from "react-router-dom";
-import { Loader } from "@/components";
 import { ROUTES } from "@/lib/routes";
+import { useProduct } from "@/features/products/api/products.api";
+import { ProductForm } from "@/features/products/components/product-form/product-form";
+import { Spinner } from "@/components/ui/spinner";
 
 function EditProductPage() {
   const { id } = useParams<{ id: string }>();
@@ -11,7 +11,7 @@ function EditProductPage() {
   const { data: product, isLoading } = useProduct(id!);
 
   if (isLoading) {
-    return <Loader />;
+    return <Spinner />;
   }
 
   if (!product) {

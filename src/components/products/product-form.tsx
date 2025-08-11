@@ -1,8 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { createProduct, updateProduct } from "../../api/products.api";
-import { CreateProduct, CreateProductSchema, Product, allowedCategories, allowedTypes } from "../../products.types";
 import {
   Button,
   Form,
@@ -19,6 +17,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui";
+import {
+  allowedCategories,
+  allowedTypes,
+  CreateProduct,
+  CreateProductSchema,
+  Product,
+} from "@/features/products/products.types";
+import {
+  createProduct,
+  updateProduct,
+} from "@/features/products/api/products.api";
 
 interface ProductFormProps {
   initialData?: Partial<Product>;
@@ -50,7 +59,9 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
       form.reset();
       onSuccess?.();
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Failed to save product");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to save product"
+      );
     }
   }
 
@@ -70,7 +81,7 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
             </FormItem>
           )}
         />
-        
+
         <FormField
           control={form.control}
           name="description"
@@ -93,12 +104,12 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
               <FormItem>
                 <FormLabel>Price</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
+                  <Input
+                    type="number"
                     step="0.01"
-                    placeholder="0.00" 
+                    placeholder="0.00"
                     {...field}
-                    onChange={e => field.onChange(parseFloat(e.target.value))}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
                   />
                 </FormControl>
                 <FormMessage />
@@ -113,11 +124,11 @@ export function ProductForm({ initialData, onSuccess }: ProductFormProps) {
               <FormItem>
                 <FormLabel>Stock</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="0" 
+                  <Input
+                    type="number"
+                    placeholder="0"
                     {...field}
-                    onChange={e => field.onChange(parseInt(e.target.value))}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
                   />
                 </FormControl>
                 <FormMessage />

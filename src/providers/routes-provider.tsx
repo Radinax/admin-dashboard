@@ -6,18 +6,12 @@ import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 
 // Lazy-loaded pages
-const LoginPage = lazy(() => import("@/features/auth/login/login.page"));
-const RegisterPage = lazy(
-  () => import("@/features/auth/register/register.page")
-);
-const HomePage = lazy(() => import("@/features/home/home.page"));
-const ProductsPage = lazy(
-  () => import("@/features/products/pages/products.page")
-);
-const EditProductPage = lazy(
-  () => import("@/features/products/pages/edit-product.page")
-);
-const SchedulePage = lazy(() => import("@/features/schedule/schedule.page"));
+const LoginPage = lazy(() => import("@/app/auth/login-page"));
+const RegisterPage = lazy(() => import("@/app/auth/register-page"));
+const HomePage = lazy(() => import("@/app/dashboard/home-page"));
+const ProductsPage = lazy(() => import("@/app/dashboard/products-page"));
+const EditProductPage = lazy(() => import("@/app/dashboard/edit-product-page"));
+const SchedulePage = lazy(() => import("@/app/dashboard/schedule-page"));
 
 function Suspended({ children }: { children: React.ReactNode }) {
   return (
