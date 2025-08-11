@@ -1,7 +1,7 @@
 import { useCreateSession } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
 import DashboardAuthPage from "@/features/auth/components/layout/dashboard-auth-layout";
-import { UserCredentials } from "@/types/auth";
+import { LoginData } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -9,7 +9,7 @@ export function LoginPage() {
   let navigate = useNavigate();
   const { mutate, isPending, error } = useCreateSession();
 
-  async function onSubmit(values: UserCredentials) {
+  async function onSubmit(values: LoginData) {
     mutate(values, {
       onSuccess: () => {
         toast.success("Login successful");

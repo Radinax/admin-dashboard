@@ -1,35 +1,34 @@
+// api/auth.ts
 import { api } from "@/lib/client";
 import { fetchData } from "@/lib/fetch";
-import { CurrentUser, currentUserSchema } from "@/types/auth";
+import {
+  LoginData,
+  SignupData,
+  CurrentUser,
+  currentUserSchema,
+  loginSchema,
+  signupSchema,
+} from "@/types/auth";
 import { HttpStatusCode } from "@/utils/http-status";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { HTTPError } from "ky";
+import { z } from "zod";
 
 /**
- *
- * @param username
- * @param password
- * @param email
- * @returns
+ * Register a new user
  */
 export async function createAccount(
-  username: string | null,
-  email: string,
-  password: string
+  data: SignupData
 ): Promise<{ id: string; username: string; email: string }> {
   try {
-    const result = await api
-      .post("signup", {
-        json: { username, email, password },
-      })
-      .json<{
-        user?: { id: string; username: string; email: string };
-        error?: string;
-      }>();
+    signupSchema.parse(data); // Validate before request
 
-    if (result.user) {
-      return result.user;
-    }
+    const result = await api.post("signup", { json: data }).json<{
+      user?: { id: string; username: string; email: string };
+      error?: string;
+    }>();
+
+    if (result.user) return result.user;
 
     throw new Error(result.error || "Failed to create account");
   } catch (error) {
@@ -44,21 +43,20 @@ export async function createAccount(
       throw new Error(message);
     }
 
+    if (error instanceof z.ZodError) {
+      throw new Error(
+        `Validation failed: ${error.errors.map((e) => e.message).join(", ")}`
+      );
+    }
+
     throw new Error("Could not connect to the server. Please try again.");
   }
 }
+
 export function useCreateAccount() {
   return useMutation({
-    mutationKey: ["signup"],
-    mutationFn: ({
-      username,
-      email,
-      password,
-    }: {
-      username: string | null;
-      email: string;
-      password: string;
-    }) => createAccount(username, email, password),
+    mutationKey: ["auth", "signup"],
+    mutationFn: createAccount,
     onSuccess: (user) => {
       console.log("Account created:", user);
     },
@@ -68,26 +66,23 @@ export function useCreateAccount() {
   });
 }
 
-export type CreateSessionData = {
-  email: string;
-  password: string;
-};
-export type UserSession = {
-  id: string;
-  username: string;
-  email: string;
-};
 /**
- *
- * @param email
- * @param password
+ * Log in and create session
  */
-export async function createSession(data: CreateSessionData) {
+export async function createSession(
+  data: LoginData
+): Promise<{ id: string; username: string; email: string }> {
   try {
-    const session = await api
-      .post("signin", { json: data })
-      .json<UserSession>();
-    return session;
+    loginSchema.parse(data);
+
+    const result = await api.post("signin", { json: data }).json<{
+      user?: { id: string; username: string; email: string };
+      error?: string;
+    }>();
+
+    if (result.user) return result.user;
+
+    throw new Error(result.error || "Invalid credentials");
   } catch (error) {
     if (error instanceof HTTPError) {
       let message = "Invalid credentials";
@@ -95,71 +90,80 @@ export async function createSession(data: CreateSessionData) {
         const body = await error.response.json<{ error?: string }>();
         message = body.error || message;
       } catch {
-        // fallback if not JSON
         message = await error.response.text();
       }
       throw new Error(message);
     }
 
-    // Network or unexpected error
     throw new Error("Could not connect to the server. Please try again.");
   }
 }
+
 export function useCreateSession() {
   return useMutation({
-    mutationKey: ["auth", "createSession"],
+    mutationKey: ["auth", "signin"],
     mutationFn: createSession,
     onError: (error: Error) => {
-      console.error("Error creating session:", error);
+      console.error("Login failed:", error.message);
     },
     onSuccess: (data) => {
-      console.log("Session created successfully:", data);
+      console.log("Logged in:", data);
     },
   });
 }
 
 /**
- * Delete user session
+ * Sign out
  */
 export async function deleteSession() {
   try {
     const response = await api.post("signout");
-
-    // Check for successful response status
-    if (response.status !== (HttpStatusCode.OK as number)) {
-      throw new Error(`Unexpected response status: ${response.status}`);
+    if (!response.ok) {
+      const message = await response.text();
+      throw new Error(`Failed to sign out: ${message}`);
     }
   } catch (error) {
-    // Handle specific error types if necessary
     if (error instanceof HTTPError) {
-      const errorMessage = await error.response.text();
-      throw new Error(`HTTP error: ${errorMessage}`);
-    } else {
-      // Re-throw other errors
-      throw new Error(`Could not create session`);
+      const message = await error.response.text();
+      throw new Error(`HTTP error during sign-out: ${message}`);
     }
+    throw new Error("Could not delete session. Network error.");
   }
 }
 
 /**
- *
- * Get current user session
+ * Get current user
  */
 export async function getCurrentUser(): Promise<CurrentUser | null> {
   try {
     const data = await fetchData<CurrentUser>("me", currentUserSchema);
     return data;
   } catch (error) {
-    console.debug("Failed to fetch current user:", error);
-    return null;
+    if (error instanceof HTTPError) {
+      if (
+        error.response.status === HttpStatusCode.Unauthorized ||
+        error.response.status === HttpStatusCode.Forbidden
+      ) {
+        return null;
+      }
+      console.debug("Failed to fetch current user:", error);
+      throw error;
+    }
+    console.error("Network error fetching current user:", error);
+    throw error;
   }
 }
+
 export function useMeQuery() {
   return useQuery({
-    queryKey: ["users", "me"],
+    queryKey: ["auth", "me"],
     queryFn: getCurrentUser,
+    staleTime: 1000 * 60 * 5,
+    gcTime: 1000 * 60 * 10,
+    retry: false,
   });
 }
+
 export function useCurrentUser() {
   const { data } = useMeQuery();
   return data;

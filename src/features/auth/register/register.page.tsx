@@ -1,7 +1,7 @@
 import { useCreateAccount } from "@/features/auth/api";
 import { AuthForm } from "@/features/auth/components";
 import DashboardAuthPage from "@/features/auth/components/layout/dashboard-auth-layout";
-import { UserCredentials } from "@/types/auth";
+import { SignupData } from "@/types/auth";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
@@ -9,24 +9,16 @@ export function RegisterPage() {
   const navigate = useNavigate();
   const { mutate, isPending, error } = useCreateAccount();
 
-  function onSubmit(values: UserCredentials) {
-    mutate(
-      {
-        username: values.username || null,
-        email: values.email,
-        password: values.password,
+  function onSubmit(values: SignupData) {
+    mutate(values, {
+      onSuccess: () => {
+        toast.success("You have successfully registered!");
+        navigate("/login");
       },
-      {
-        onSuccess: () => {
-          toast.success("You have successfully registered!");
-          // Navigate to login (or auto-login and go to /app if you prefer)
-          navigate("/login");
-        },
-        onError: (err: Error) => {
-          toast.error(err.message);
-        },
-      }
-    );
+      onError: (err: Error) => {
+        toast.error(err.message);
+      },
+    });
   }
 
   return (

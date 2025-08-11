@@ -1,3 +1,4 @@
+// components/auth/AuthForm.tsx
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -17,17 +18,20 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { UserCredentials, formSchema } from "@/types/auth";
+import { LoginData, SignupData, loginSchema, signupSchema } from "@/types/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 
-type FormType = "Register" | "Login";
+type FormType = "Login" | "Register";
+
+// Union type for form values
+type AuthFormData = LoginData | SignupData;
 
 export type AuthFormProps = Readonly<{
   type: FormType;
-  onSubmit: (value: UserCredentials) => void;
-  isSubmitting?: boolean; // <-- New: controlled submitting state
-  submitError?: string; // <-- New: server error message
+  onSubmit: (value: AuthFormData) => void;
+  isSubmitting?: boolean;
+  submitError?: string;
 }>;
 
 export function AuthForm({
@@ -36,25 +40,24 @@ export function AuthForm({
   isSubmitting: externalIsSubmitting,
   submitError,
 }: AuthFormProps) {
-  const form = useForm<UserCredentials>({
-    resolver: zodResolver(formSchema),
+  const isLogin = type === "Login";
+
+  // Dynamically choose resolver and default values
+  const form = useForm<AuthFormData>({
+    resolver: zodResolver(isLogin ? loginSchema : signupSchema),
     defaultValues: {
-      username: type === "Login" ? undefined : "",
-      email: type === "Login" ? "admin@admin.com" : "",
-      password: type === "Login" ? "Admin345678." : "",
+      username: isLogin ? undefined : "",
+      email: "admin@admin.com", // demo prefills
+      password: "Admin345678.",
     },
   });
 
-  const isLogin = type === "Login";
   const isLoading = externalIsSubmitting || form.formState.isSubmitting;
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <fieldset
-          className="flex flex-col justify-center items-center"
-          disabled={isLoading}
-        >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+        <fieldset className="flex flex-col" disabled={isLoading}>
           <Card className="w-full max-w-sm">
             <CardHeader>
               <CardTitle className="text-2xl">{type}</CardTitle>
@@ -66,7 +69,7 @@ export function AuthForm({
             </CardHeader>
 
             <CardContent className="grid gap-4">
-              {/* Username Field (Only for Register) */}
+              {/* Username (Register only) */}
               {!isLogin && (
                 <FormField
                   control={form.control}
@@ -77,12 +80,14 @@ export function AuthForm({
                       <FormControl>
                         <Input
                           type="text"
-                          placeholder="Enter your username"
+                          placeholder="johndoe"
+                          autoComplete="username"
                           {...field}
+                          value={field.value ?? ""}
                         />
                       </FormControl>
                       <FormDescription>
-                        Your username will default to your email if left blank.
+                        Will default to your email if left blank.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -100,12 +105,13 @@ export function AuthForm({
                     <FormControl>
                       <Input
                         type="email"
-                        placeholder="Enter your email"
+                        placeholder="name@example.com"
+                        autoComplete="email"
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      We won't share your email with anyone.
+                      We'll never share your email.
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -122,12 +128,17 @@ export function AuthForm({
                     <FormControl>
                       <Input
                         type="password"
-                        placeholder="Enter your password"
+                        placeholder="••••••••"
+                        autoComplete={
+                          isLogin ? "current-password" : "new-password"
+                        }
                         {...field}
                       />
                     </FormControl>
                     <FormDescription>
-                      Use a strong, unique password.
+                      {isLogin
+                        ? "Enter your existing password."
+                        : "Must be 8+ chars with uppercase, lowercase, number, and symbol."}
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
@@ -136,14 +147,13 @@ export function AuthForm({
 
               {/* Server Error */}
               {submitError && (
-                <div className="text-sm text-red-500 mt-2 text-center">
+                <p className="text-sm text-red-500 text-center mt-2">
                   {submitError}
-                </div>
+                </p>
               )}
             </CardContent>
 
             <CardFooter className="flex flex-col gap-2">
-              {/* Submit Button */}
               <Button type="submit" className="w-full" disabled={isLoading}>
                 {isLoading ? "Processing..." : type}
               </Button>
