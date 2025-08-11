@@ -3,8 +3,9 @@ import { useProduct } from "../api/products.api";
 import { ProductForm } from "../components/product-form/product-form";
 import { useNavigate, useParams } from "react-router-dom";
 import { Loader } from "@/components";
+import { ROUTES } from "@/lib/routes";
 
-export function EditProductPage() {
+function EditProductPage() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: product, isLoading } = useProduct(id!);
@@ -32,12 +33,14 @@ export function EditProductPage() {
           <CardTitle>Edit Product: {product.name}</CardTitle>
         </CardHeader>
         <CardContent>
-          <ProductForm 
-            initialData={product} 
-            onSuccess={() => navigate("/products")} 
+          <ProductForm
+            initialData={product}
+            onSuccess={() => navigate(ROUTES.products)}
           />
         </CardContent>
       </Card>
     </div>
   );
 }
+
+export default EditProductPage;

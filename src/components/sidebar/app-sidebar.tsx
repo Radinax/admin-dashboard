@@ -50,7 +50,9 @@ type SidebarProps = {
   profile: ProfileProps;
 };
 
-export function AppSidebar({ profile }: SidebarProps) {
+export function AppSidebar({
+  profile = { name: "guest", email: "guest@guest.com" },
+}: SidebarProps) {
   const user = {
     name: profile.name,
     email: profile.email,

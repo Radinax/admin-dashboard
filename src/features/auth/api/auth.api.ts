@@ -23,14 +23,13 @@ export async function createAccount(
   try {
     signupSchema.parse(data); // Validate before request
 
-    const result = await api.post("signup", { json: data }).json<{
-      user?: { id: string; username: string; email: string };
-      error?: string;
-    }>();
+    const result = await api
+      .post("signup", { json: data })
+      .json<{ id: string; username: string; email: string }>();
 
-    if (result.user) return result.user;
+    if (result) return result;
 
-    throw new Error(result.error || "Failed to create account");
+    throw new Error("Failed to create account");
   } catch (error) {
     if (error instanceof HTTPError) {
       let message = "Failed to create account";
@@ -73,16 +72,15 @@ export async function createSession(
   data: LoginData
 ): Promise<{ id: string; username: string; email: string }> {
   try {
-    loginSchema.parse(data);
+    const parsedData = loginSchema.parse(data);
 
-    const result = await api.post("signin", { json: data }).json<{
-      user?: { id: string; username: string; email: string };
-      error?: string;
-    }>();
+    const result = await api
+      .post("signin", { json: parsedData })
+      .json<{ id: string; username: string; email: string }>();
 
-    if (result.user) return result.user;
+    if (result) return result;
 
-    throw new Error(result.error || "Invalid credentials");
+    throw new Error("Invalid credentials");
   } catch (error) {
     if (error instanceof HTTPError) {
       let message = "Invalid credentials";
@@ -93,6 +91,12 @@ export async function createSession(
         message = await error.response.text();
       }
       throw new Error(message);
+    }
+
+    if (error instanceof SyntaxError) {
+      throw new Error(
+        "Invalid response from server: Malformed JSON. Check network tab."
+      );
     }
 
     throw new Error("Could not connect to the server. Please try again.");

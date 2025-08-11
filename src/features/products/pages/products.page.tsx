@@ -15,7 +15,7 @@ import { ProductForm } from "../components/product-form/product-form";
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
-export function ProductsPage() {
+function ProductsPage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   return (
@@ -49,3 +49,5 @@ export function ProductsPage() {
     </div>
   );
 }
+
+export default ProductsPage;
